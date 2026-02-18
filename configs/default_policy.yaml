@@ -1,0 +1,175 @@
+version: "1.0"
+policy_name: "default"
+
+default_action: ALLOW
+
+ingress_rules:
+  - name: block_prompt_injection
+    description: "Detected prompt injection attempt"
+    priority: 100
+    action: DENY
+    deny_message: "[AGENT GUARD] Blocked: prompt injection detected."
+    conditions:
+      - field: contains_injection_patterns
+        match_type: boolean
+        value: true
+
+  - name: block_sensitive_paths
+    description: "Prompt targets sensitive system paths"
+    priority: 85
+    action: DENY
+    deny_message: "[AGENT GUARD] Blocked: sensitive path access denied."
+    conditions:
+      - field: contains_sensitive_paths
+        match_type: boolean
+        value: true
+
+  - name: block_harm_violence
+    description: "Prompt requests instructions for violence, weapons, or harmful substances"
+    priority: 98
+    action: DENY
+    deny_message: "[AGENT GUARD] Blocked: request for harmful/violent content detected."
+    conditions:
+      - field: contains_harm_patterns
+        match_type: boolean
+        value: true
+
+  - name: block_malware_request
+    description: "Prompt requests creation of malware, exploits, or offensive tools"
+    priority: 96
+    action: DENY
+    deny_message: "[AGENT GUARD] Blocked: malware/exploit generation request detected."
+    conditions:
+      - field: contains_malware_request
+        match_type: boolean
+        value: true
+
+  - name: block_phishing_fraud
+    description: "Prompt requests creation of phishing content or fraudulent materials"
+    priority: 94
+    action: DENY
+    deny_message: "[AGENT GUARD] Blocked: phishing/fraud content request detected."
+    conditions:
+      - field: contains_phishing_patterns
+        match_type: boolean
+        value: true
+
+  - name: block_data_exfiltration
+    description: "Prompt contains data exfiltration patterns"
+    priority: 92
+    action: DENY
+    deny_message: "[AGENT GUARD] Blocked: data exfiltration attempt detected."
+    conditions:
+      - field: contains_exfiltration
+        match_type: boolean
+        value: true
+
+  - name: block_obfuscation_evasion
+    description: "Prompt uses encoding or obfuscation to evade detection"
+    priority: 90
+    action: DENY
+    deny_message: "[AGENT GUARD] Blocked: obfuscation/evasion technique detected."
+    conditions:
+      - field: contains_obfuscation
+        match_type: boolean
+        value: true
+
+  - name: review_role_impersonation
+    description: "Prompt attempts to assign a privileged role identity to the model"
+    priority: 86
+    action: HUMAN_REVIEW
+    conditions:
+      - field: contains_role_impersonation
+        match_type: boolean
+        value: true
+
+  - name: block_pii_request
+    description: "Prompt is requesting personal/sensitive information"
+    priority: 82
+    action: DENY
+    deny_message: "[AGENT GUARD] Blocked: request for personal/sensitive information detected."
+    conditions:
+      - field: contains_pii_request
+        match_type: boolean
+        value: true
+
+  - name: block_dangerous_commands
+    description: "Dangerous system commands detected"
+    priority: 80
+    action: DENY
+    deny_message: "[AGENT GUARD] Blocked: dangerous command detected."
+    conditions:
+      - field: contains_system_commands
+        match_type: boolean
+        value: true
+      - field: risk_score
+        match_type: threshold
+        value: 0.3
+
+  - name: review_high_risk
+    description: "High risk score requires human review"
+    priority: 70
+    action: HUMAN_REVIEW
+    conditions:
+      - field: risk_score
+        match_type: threshold
+        value: 0.6
+
+  - name: log_code_execution
+    description: "Log code execution requests"
+    priority: 30
+    action: LOG
+    conditions:
+      - field: intent_category
+        match_type: exact
+        value: "code_execution"
+
+egress_rules:
+  - name: block_credential_leak
+    description: "Model output contains credentials"
+    priority: 100
+    action: DENY
+    deny_message: "[AGENT GUARD] Output blocked: contains credentials."
+    conditions:
+      - field: contains_credentials
+        match_type: boolean
+        value: true
+
+  - name: block_pii_leak
+    description: "Model output contains PII"
+    priority: 90
+    action: DENY
+    deny_message: "[AGENT GUARD] Output blocked: contains PII."
+    conditions:
+      - field: contains_pii
+        match_type: boolean
+        value: true
+
+rate_limits:
+  requests_per_minute: 120
+  requests_per_hour: 2000
+  burst_threshold: 30
+
+network:
+  egress_policy: allowlist
+  allowed_domains:
+    - "api.openai.com"
+    - "api.anthropic.com"
+  denied_domains:
+    - "*.onion"
+    - "pastebin.com"
+
+filesystem:
+  denied_paths:
+    - "/etc/**"
+    - "/root/**"
+    - "**/.ssh/**"
+    - "**/.env"
+    - "**/*secret*"
+    - "**/*password*"
+  allowed_read_paths:
+    - "/home/*/documents/**"
+    - "/tmp/agent_workspace/**"
+  allowed_write_paths:
+    - "/home/*/documents/agent_output/**"
+    - "/tmp/agent_workspace/**"
