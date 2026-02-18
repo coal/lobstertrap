@@ -3,24 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lobster Trap Dashboard</title>
+<title>Lobster Trap</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #0d1117;
-  --surface: #161b22;
-  --surface2: #1c2128;
-  --border: #30363d;
-  --text: #e6edf3;
-  --text-muted: #8b949e;
-  --accent: #58a6ff;
-  --green: #3fb950;
-  --red: #f85149;
-  --amber: #d29922;
-  --blue: #58a6ff;
-  --purple: #bc8cff;
-  --cyan: #39d2c0;
+  --bg: #0a1628;
+  --surface: #0f1f38;
+  --surface2: #152847;
+  --border: #1e3a5f;
+  --text: #e0e8f0;
+  --text-muted: #7a9bb5;
+  --accent: #e63946;
+  --green: #06d6a0;
+  --red: #e63946;
+  --amber: #f4a261;
+  --blue: #4cc9f0;
+  --purple: #b185db;
+  --cyan: #06d6a0;
+  --teal: #118ab2;
   --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', Consolas, monospace;
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
 }
@@ -55,10 +56,15 @@ body {
 
 .sidebar-brand h1 {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--accent);
   font-family: var(--font-mono);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
+
+.sidebar-brand h1 .brand-icon { font-size: 16px; }
 
 .sidebar-brand .subtitle {
   font-size: 11px;
@@ -103,7 +109,7 @@ body {
   margin-right: 6px;
 }
 
-.status-dot.connected { background: var(--green); }
+.status-dot.connected { background: var(--green); box-shadow: 0 0 6px var(--green); }
 .status-dot.disconnected { background: var(--red); }
 
 /* Main area */
@@ -168,11 +174,14 @@ table.feed th {
   font-weight: 500;
   border-bottom: 1px solid var(--border);
   z-index: 1;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.5px;
 }
 
 table.feed td {
   padding: 5px 10px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(30,58,95,0.5);
   white-space: nowrap;
 }
 
@@ -185,20 +194,20 @@ table.feed tr.selected { background: var(--surface2); }
   padding: 1px 6px;
   border-radius: 3px;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-.badge-allow { background: rgba(63,185,80,0.15); color: var(--green); }
-.badge-deny { background: rgba(248,81,73,0.15); color: var(--red); }
-.badge-log { background: rgba(88,166,255,0.15); color: var(--blue); }
-.badge-human_review { background: rgba(210,153,34,0.15); color: var(--amber); }
-.badge-quarantine { background: rgba(188,140,255,0.15); color: var(--purple); }
-.badge-modify { background: rgba(57,210,192,0.15); color: var(--cyan); }
-.badge-rate_limit { background: rgba(210,153,34,0.15); color: var(--amber); }
-.badge-redirect { background: rgba(88,166,255,0.15); color: var(--blue); }
+.badge-allow { background: rgba(6,214,160,0.12); color: var(--green); }
+.badge-deny { background: rgba(230,57,70,0.15); color: var(--red); }
+.badge-log { background: rgba(76,201,240,0.12); color: var(--blue); }
+.badge-human_review { background: rgba(244,162,97,0.15); color: var(--amber); }
+.badge-quarantine { background: rgba(177,133,219,0.12); color: var(--purple); }
+.badge-modify { background: rgba(6,214,160,0.12); color: var(--cyan); }
+.badge-rate_limit { background: rgba(244,162,97,0.15); color: var(--amber); }
+.badge-redirect { background: rgba(76,201,240,0.12); color: var(--blue); }
 
-.badge-ingress { background: rgba(88,166,255,0.1); color: var(--blue); }
-.badge-egress { background: rgba(188,140,255,0.1); color: var(--purple); }
+.badge-ingress { background: rgba(76,201,240,0.08); color: var(--blue); }
+.badge-egress { background: rgba(177,133,219,0.08); color: var(--purple); }
 
 .risk-bar {
   display: inline-block;
@@ -504,7 +513,6 @@ table.feed tr.selected { background: var(--surface2); }
 
 .hist-bar {
   width: 100%;
-  background: var(--accent);
   opacity: 0.8;
   border-radius: 3px 3px 0 0;
   transition: height 0.3s;
@@ -677,7 +685,7 @@ table.feed tr.selected { background: var(--surface2); }
   gap: 8px;
 }
 
-.empty-state .icon { font-size: 32px; opacity: 0.3; }
+.empty-state .icon { font-size: 36px; opacity: 0.3; }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -690,8 +698,8 @@ table.feed tr.selected { background: var(--surface2); }
 
 <aside class="sidebar">
   <div class="sidebar-brand">
-    <h1>Lobster Trap</h1>
-    <div class="subtitle">Deep Prompt Inspection</div>
+    <h1><span class="brand-icon">&#129438;</span> Lobster Trap</h1>
+    <div class="subtitle">Prompt Inspection Proxy</div>
   </div>
   <ul class="sidebar-nav">
     <li class="active" data-view="feed">&#9654; Live Feed</li>
@@ -741,7 +749,7 @@ table.feed tr.selected { background: var(--surface2); }
       </table>
     </div>
     <div class="empty-state" id="feedEmpty">
-      <div class="icon">&#9881;</div>
+      <div class="icon">&#129438;</div>
       <div>No events yet. Send requests through the proxy to see them here.</div>
     </div>
   </div>
@@ -1190,12 +1198,12 @@ table.feed tr.selected { background: var(--surface2); }
 
   function actionColor(action) {
     const map = { ALLOW: 'var(--green)', DENY: 'var(--red)', LOG: 'var(--blue)', HUMAN_REVIEW: 'var(--amber)', QUARANTINE: 'var(--purple)', MODIFY: 'var(--cyan)', RATE_LIMIT: 'var(--amber)', REDIRECT: 'var(--blue)' };
-    return map[action] || 'var(--accent)';
+    return map[action] || 'var(--teal)';
   }
 
   function intentColor(intent) {
-    const map = { general: 'var(--blue)', credential_access: 'var(--red)', system: 'var(--amber)', code_execution: 'var(--purple)', network: 'var(--cyan)', file_io: 'var(--green)', data_access: 'var(--accent)', communication: '#8b949e' };
-    return map[intent] || 'var(--accent)';
+    const map = { general: 'var(--blue)', credential_access: 'var(--red)', system: 'var(--amber)', code_execution: 'var(--purple)', network: 'var(--cyan)', file_io: 'var(--green)', data_access: 'var(--teal)', communication: '#7a9bb5' };
+    return map[intent] || 'var(--teal)';
   }
 
   // Render policy
