@@ -86,7 +86,7 @@ Start the reverse proxy.
 | `--audit-log` | _(stderr)_ | Path to audit log file |
 | `--no-dashboard` | `false` | Disable the real-time web dashboard |
 
-The real-time dashboard is available at `http://localhost:8080/_guard/` when the proxy is running.
+The real-time dashboard is available at `http://localhost:8080/_lobstertrap/` when the proxy is running.
 
 ### `lobstertrap inspect`
 

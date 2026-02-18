@@ -87,7 +87,7 @@ func runServe(cmd *cobra.Command, args []string) error {
 
 		dashHandler := dashboard.Handler(hub)
 		handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if strings.HasPrefix(r.URL.Path, "/_guard") {
+			if strings.HasPrefix(r.URL.Path, "/_lobstertrap") {
 				dashHandler.ServeHTTP(w, r)
 				return
 			}
@@ -109,7 +109,7 @@ func runServe(cmd *cobra.Command, args []string) error {
 		if strings.HasPrefix(dashAddr, ":") {
 			dashAddr = "localhost" + dashAddr
 		}
-		fmt.Fprintf(os.Stderr, "  Dashboard: http://%s/_guard/\n", dashAddr)
+		fmt.Fprintf(os.Stderr, "  Dashboard: http://%s/_lobstertrap/\n", dashAddr)
 	}
 	fmt.Fprintln(os.Stderr)
 

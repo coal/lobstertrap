@@ -14,12 +14,12 @@ import (
 var staticFS embed.FS
 
 // Handler returns an http.Handler that serves the dashboard routes.
-// All routes are under /_guard/.
+// All routes are under /_lobstertrap/.
 func Handler(hub *Hub) http.Handler {
 	mux := http.NewServeMux()
 
 	// Dashboard HTML
-	mux.HandleFunc("/_guard/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/_lobstertrap/", func(w http.ResponseWriter, r *http.Request) {
 		data, err := staticFS.ReadFile("static/dashboard.html")
 		if err != nil {
 			http.Error(w, "dashboard not found", http.StatusInternalServerError)
@@ -30,7 +30,7 @@ func Handler(hub *Hub) http.Handler {
 	})
 
 	// WebSocket endpoint
-	mux.HandleFunc("/_guard/ws", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/_lobstertrap/ws", func(w http.ResponseWriter, r *http.Request) {
 		conn, err := websocket.Accept(w, r, &websocket.AcceptOptions{
 			InsecureSkipVerify: true, // Allow connections from any origin
 		})
@@ -49,19 +49,19 @@ func Handler(hub *Hub) http.Handler {
 	})
 
 	// REST: stats snapshot
-	mux.HandleFunc("/_guard/api/stats", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/_lobstertrap/api/stats", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(hub.StatsSnapshot())
 	})
 
 	// REST: recent events
-	mux.HandleFunc("/_guard/api/events", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/_lobstertrap/api/events", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(hub.Events().All())
 	})
 
 	// REST: policy
-	mux.HandleFunc("/_guard/api/policy", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/_lobstertrap/api/policy", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(hub.PolicyConfig())
 	})

@@ -881,7 +881,7 @@ table.feed tr.selected { background: var(--surface2); }
   // WebSocket
   function connect() {
     const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
-    ws = new WebSocket(proto + '//' + location.host + '/_guard/ws');
+    ws = new WebSocket(proto + '//' + location.host + '/_lobstertrap/ws');
 
     ws.onopen = () => {
       statusDot.className = 'status-dot connected';
