@@ -6,9 +6,9 @@ import "github.com/spf13/cobra"
 var Version = "0.1.0"
 
 var rootCmd = &cobra.Command{
-	Use:   "agentguard",
-	Short: "Agent Guard — Deep Prompt Inspection for LLM Inference",
-	Long: `Agent Guard is a security middleware for AI agents.
+	Use:   "lobstertrap",
+	Short: "Lobster Trap — Deep Prompt Inspection for LLM Inference",
+	Long: `Lobster Trap is a security middleware for AI agents.
 It sits between an AI agent and the LLM, inspecting every prompt and
 every output using deep prompt inspection — regex-based metadata extraction
 evaluated against programmable firewall rules.`,
@@ -25,7 +25,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version",
 	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Printf("agentguard v%s\n", Version)
+		cmd.Printf("lobstertrap v%s\n", Version)
 	},
 }
 

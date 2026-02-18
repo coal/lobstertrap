@@ -53,7 +53,7 @@ func New(pol *policy.Policy, auditLogger *audit.Logger) *Pipeline {
 }
 
 // ProcessIngress inspects a prompt and evaluates ingress rules.
-// declared may be nil if the agent didn't send _agentguard headers.
+// declared may be nil if the agent didn't send _lobstertrap headers.
 func (p *Pipeline) ProcessIngress(promptText string, declared *metadata.RequestHeaders) *PipelineResult {
 	reqID := fmt.Sprintf("req-%d", requestCounter.Add(1))
 

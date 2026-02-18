@@ -8,7 +8,7 @@ ingress_rules:
     description: "Detected prompt injection attempt"
     priority: 100
     action: DENY
-    deny_message: "[AGENT GUARD] Blocked: prompt injection detected."
+    deny_message: "[LOBSTER TRAP] Blocked: prompt injection detected."
     conditions:
       - field: contains_injection_patterns
         match_type: boolean
@@ -18,7 +18,7 @@ ingress_rules:
     description: "Prompt targets sensitive system paths"
     priority: 85
     action: DENY
-    deny_message: "[AGENT GUARD] Blocked: sensitive path access denied."
+    deny_message: "[LOBSTER TRAP] Blocked: sensitive path access denied."
     conditions:
       - field: contains_sensitive_paths
         match_type: boolean
@@ -28,7 +28,7 @@ ingress_rules:
     description: "Prompt requests instructions for violence, weapons, or harmful substances"
     priority: 98
     action: DENY
-    deny_message: "[AGENT GUARD] Blocked: request for harmful/violent content detected."
+    deny_message: "[LOBSTER TRAP] Blocked: request for harmful/violent content detected."
     conditions:
       - field: contains_harm_patterns
         match_type: boolean
@@ -38,7 +38,7 @@ ingress_rules:
     description: "Prompt requests creation of malware, exploits, or offensive tools"
     priority: 96
     action: DENY
-    deny_message: "[AGENT GUARD] Blocked: malware/exploit generation request detected."
+    deny_message: "[LOBSTER TRAP] Blocked: malware/exploit generation request detected."
     conditions:
       - field: contains_malware_request
         match_type: boolean
@@ -48,7 +48,7 @@ ingress_rules:
     description: "Prompt requests creation of phishing content or fraudulent materials"
     priority: 94
     action: DENY
-    deny_message: "[AGENT GUARD] Blocked: phishing/fraud content request detected."
+    deny_message: "[LOBSTER TRAP] Blocked: phishing/fraud content request detected."
     conditions:
       - field: contains_phishing_patterns
         match_type: boolean
@@ -58,7 +58,7 @@ ingress_rules:
     description: "Prompt contains data exfiltration patterns"
     priority: 92
     action: DENY
-    deny_message: "[AGENT GUARD] Blocked: data exfiltration attempt detected."
+    deny_message: "[LOBSTER TRAP] Blocked: data exfiltration attempt detected."
     conditions:
       - field: contains_exfiltration
         match_type: boolean
@@ -68,7 +68,7 @@ ingress_rules:
     description: "Prompt uses encoding or obfuscation to evade detection"
     priority: 90
     action: DENY
-    deny_message: "[AGENT GUARD] Blocked: obfuscation/evasion technique detected."
+    deny_message: "[LOBSTER TRAP] Blocked: obfuscation/evasion technique detected."
     conditions:
       - field: contains_obfuscation
         match_type: boolean
@@ -87,7 +87,7 @@ ingress_rules:
     description: "Prompt is requesting personal/sensitive information"
     priority: 82
     action: DENY
-    deny_message: "[AGENT GUARD] Blocked: request for personal/sensitive information detected."
+    deny_message: "[LOBSTER TRAP] Blocked: request for personal/sensitive information detected."
     conditions:
       - field: contains_pii_request
         match_type: boolean
@@ -97,7 +97,7 @@ ingress_rules:
     description: "Dangerous system commands detected"
     priority: 80
     action: DENY
-    deny_message: "[AGENT GUARD] Blocked: dangerous command detected."
+    deny_message: "[LOBSTER TRAP] Blocked: dangerous command detected."
     conditions:
       - field: contains_system_commands
         match_type: boolean
@@ -129,7 +129,7 @@ egress_rules:
     description: "Model output contains credentials"
     priority: 100
     action: DENY
-    deny_message: "[AGENT GUARD] Output blocked: contains credentials."
+    deny_message: "[LOBSTER TRAP] Output blocked: contains credentials."
     conditions:
       - field: contains_credentials
         match_type: boolean
@@ -139,7 +139,7 @@ egress_rules:
     description: "Model output contains PII"
     priority: 90
     action: DENY
-    deny_message: "[AGENT GUARD] Output blocked: contains PII."
+    deny_message: "[LOBSTER TRAP] Output blocked: contains PII."
     conditions:
       - field: contains_pii
         match_type: boolean

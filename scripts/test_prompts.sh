@@ -1,11 +1,11 @@
 #!/bin/bash
-# Test prompts against a running Agent Guard proxy
+# Test prompts against a running Lobster Trap proxy
 # Usage: ./scripts/test_prompts.sh [proxy_url]
 
 PROXY=${1:-"http://localhost:8080"}
 ENDPOINT="${PROXY}/v1/chat/completions"
 
-echo "=== Agent Guard Test Prompts ==="
+echo "=== Lobster Trap Test Prompts ==="
 echo "Proxy: ${PROXY}"
 echo ""
 
@@ -22,7 +22,7 @@ send_prompt() {
             \"messages\": [{\"role\": \"user\", \"content\": \"${prompt}\"}]
         }")
 
-    if echo "$response" | grep -q "AGENT GUARD"; then
+    if echo "$response" | grep -q "LOBSTER TRAP"; then
         echo "BLOCKED - ${response}" | head -c 120
     else
         echo "ALLOWED"

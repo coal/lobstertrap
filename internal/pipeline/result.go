@@ -45,7 +45,7 @@ func (r *PipelineResult) NeedsHumanReview() bool {
 	return false
 }
 
-// BuildResponseHeaders assembles the full Agent Guard response headers
+// BuildResponseHeaders assembles the full Lobster Trap response headers
 // from this pipeline result.
 func (r *PipelineResult) BuildResponseHeaders() *metadata.ResponseHeaders {
 	rh := &metadata.ResponseHeaders{

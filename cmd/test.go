@@ -105,7 +105,7 @@ func runTest(cmd *cobra.Command, args []string) error {
 	// Create pipeline
 	pipe := pipeline.New(pol, audit.NopLogger())
 
-	fmt.Fprintf(os.Stderr, "\n=== Agent Guard Policy Tests ===\n")
+	fmt.Fprintf(os.Stderr, "\n=== Lobster Trap Policy Tests ===\n")
 	fmt.Fprintf(os.Stderr, "Policy: %s (%s)\n\n", pol.PolicyName, pol.Version)
 
 	passed := 0

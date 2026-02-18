@@ -1,6 +1,6 @@
 .PHONY: build build-static test bench clean install
 
-BINARY := agentguard
+BINARY := lobstertrap
 VERSION := 0.1.0
 LDFLAGS := -ldflags="-s -w -X github.com/coal/lobstertrap/cmd.Version=$(VERSION)"
 

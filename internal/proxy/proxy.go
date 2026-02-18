@@ -77,7 +77,7 @@ func (gp *GuardProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Extract prompt text and run ingress DPI with declared headers
 	promptText := ExtractPromptText(chatReq)
-	result := gp.pipe.ProcessIngress(promptText, chatReq.AgentGuard)
+	result := gp.pipe.ProcessIngress(promptText, chatReq.LobsterTrap)
 
 	gp.logger.Info().
 		Str("request_id", result.RequestID).
@@ -110,7 +110,7 @@ func (gp *GuardProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			Msg("requires human review")
 
 		headers := result.BuildResponseHeaders()
-		denyResp := MakeDenyResponse("[AGENT GUARD] Request requires human review before processing.", chatReq.Model, headers)
+		denyResp := MakeDenyResponse("[LOBSTER TRAP] Request requires human review before processing.", chatReq.Model, headers)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(denyResp)
@@ -165,12 +165,12 @@ func (gp *GuardProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			Msg("egress")
 	}
 
-	// Inject _agentguard headers into the backend response
+	// Inject _lobstertrap headers into the backend response
 	headers := result.BuildResponseHeaders()
-	injected, err := injectAgentGuardHeaders(respBody, headers)
+	injected, err := injectLobsterTrapHeaders(respBody, headers)
 	if err != nil {
 		// Injection failed — forward the original response unchanged
-		gp.logger.Warn().Err(err).Msg("failed to inject _agentguard headers")
+		gp.logger.Warn().Err(err).Msg("failed to inject _lobstertrap headers")
 		for k, v := range recorder.header {
 			w.Header()[k] = v
 		}

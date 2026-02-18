@@ -27,7 +27,7 @@ var (
 
 var serveCmd = &cobra.Command{
 	Use:   "serve",
-	Short: "Start the Agent Guard reverse proxy",
+	Short: "Start the Lobster Trap reverse proxy",
 	Long:  "Start the HTTP reverse proxy that inspects prompts and responses using deep prompt inspection.",
 	RunE:  runServe,
 }
@@ -42,7 +42,7 @@ func init() {
 
 func runServe(cmd *cobra.Command, args []string) error {
 	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr}).
-		With().Timestamp().Str("component", "agentguard").Logger()
+		With().Timestamp().Str("component", "lobstertrap").Logger()
 
 	// Load policy
 	pol, err := policy.LoadFromFile(policyFile)
@@ -98,9 +98,9 @@ func runServe(cmd *cobra.Command, args []string) error {
 	logger.Info().
 		Str("listen", listenAddr).
 		Str("backend", backendURL).
-		Msg("starting agent guard proxy")
+		Msg("starting lobster trap proxy")
 
-	fmt.Fprintf(os.Stderr, "\n  Agent Guard v%s\n", Version)
+	fmt.Fprintf(os.Stderr, "\n  Lobster Trap v%s\n", Version)
 	fmt.Fprintf(os.Stderr, "  Policy:  %s (%s)\n", pol.PolicyName, pol.Version)
 	fmt.Fprintf(os.Stderr, "  Listen:  %s\n", listenAddr)
 	fmt.Fprintf(os.Stderr, "  Backend: %s\n", backendURL)

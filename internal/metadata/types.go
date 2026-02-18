@@ -5,9 +5,9 @@ import (
 	"github.com/coal/lobstertrap/internal/policy"
 )
 
-// RequestHeaders are optional agent-declared metadata sent in the _agentguard
+// RequestHeaders are optional agent-declared metadata sent in the _lobstertrap
 // field of a chat completion request. Like packet headers in network DPI,
-// they let the agent declare its intent so Agent Guard can verify the claim
+// they let the agent declare its intent so Lobster Trap can verify the claim
 // against its own DPI extraction.
 type RequestHeaders struct {
 	DeclaredIntent   string   `json:"declared_intent,omitempty"`
@@ -18,8 +18,8 @@ type RequestHeaders struct {
 }
 
 // ResponseHeaders are embedded in every chat completion response under
-// the _agentguard field. They carry the full inspection report back to
-// the agent so it can see exactly what Agent Guard detected and decided.
+// the _lobstertrap field. They carry the full inspection report back to
+// the agent so it can see exactly what Lobster Trap detected and decided.
 type ResponseHeaders struct {
 	RequestID string        `json:"request_id"`
 	Verdict   string        `json:"verdict"` // ALLOW, DENY, HUMAN_REVIEW

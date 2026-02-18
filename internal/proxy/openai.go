@@ -21,8 +21,8 @@ type ChatCompletionRequest struct {
 	Temperature *float64      `json:"temperature,omitempty"`
 	MaxTokens   *int          `json:"max_tokens,omitempty"`
 	Stream      bool          `json:"stream,omitempty"`
-	// Agent Guard metadata headers (optional, from _agentguard field)
-	AgentGuard *metadata.RequestHeaders `json:"_agentguard,omitempty"`
+	// Lobster Trap metadata headers (optional, from _lobstertrap field)
+	LobsterTrap *metadata.RequestHeaders `json:"_lobstertrap,omitempty"`
 	// Preserve other fields
 	Extra map[string]any `json:"-"`
 }
@@ -42,7 +42,7 @@ type ChatCompletionResponse struct {
 	Model      string                    `json:"model"`
 	Choices    []ChatChoice              `json:"choices"`
 	Usage      *Usage                    `json:"usage,omitempty"`
-	AgentGuard *metadata.ResponseHeaders `json:"_agentguard,omitempty"`
+	LobsterTrap *metadata.ResponseHeaders `json:"_lobstertrap,omitempty"`
 }
 
 // Usage tracks token usage.
@@ -88,13 +88,13 @@ func ExtractResponseText(resp *ChatCompletionResponse) string {
 }
 
 // MakeDenyResponse creates a chat completion response with a deny message
-// and optional Agent Guard response headers.
+// and optional Lobster Trap response headers.
 func MakeDenyResponse(message string, model string, headers *metadata.ResponseHeaders) *ChatCompletionResponse {
 	return &ChatCompletionResponse{
-		ID:         "agentguard-deny",
+		ID:         "lobstertrap-deny",
 		Object:     "chat.completion",
 		Model:      model,
-		AgentGuard: headers,
+		LobsterTrap: headers,
 		Choices: []ChatChoice{
 			{
 				Index: 0,
@@ -108,9 +108,9 @@ func MakeDenyResponse(message string, model string, headers *metadata.ResponseHe
 	}
 }
 
-// injectAgentGuardHeaders injects _agentguard response headers into raw
+// injectLobsterTrapHeaders injects _lobstertrap response headers into raw
 // backend response JSON without disturbing any other fields.
-func injectAgentGuardHeaders(respBody []byte, headers *metadata.ResponseHeaders) ([]byte, error) {
+func injectLobsterTrapHeaders(respBody []byte, headers *metadata.ResponseHeaders) ([]byte, error) {
 	var raw map[string]json.RawMessage
 	if err := json.Unmarshal(respBody, &raw); err != nil {
 		return nil, err
@@ -120,7 +120,7 @@ func injectAgentGuardHeaders(respBody []byte, headers *metadata.ResponseHeaders)
 	if err != nil {
 		return nil, err
 	}
-	raw["_agentguard"] = headerBytes
+	raw["_lobstertrap"] = headerBytes
 
 	return json.Marshal(raw)
 }

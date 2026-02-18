@@ -92,11 +92,11 @@ func TestParseChatResponse(t *testing.T) {
 	}
 }
 
-func TestParseChatRequest_WithAgentGuard(t *testing.T) {
+func TestParseChatRequest_WithLobsterTrap(t *testing.T) {
 	body := `{
 		"model": "llama3",
 		"messages": [{"role": "user", "content": "hello"}],
-		"_agentguard": {
+		"_lobstertrap": {
 			"declared_intent": "general",
 			"declared_paths": ["/home/cole/notes.txt"],
 			"agent_id": "my-agent-v1"
@@ -107,21 +107,21 @@ func TestParseChatRequest_WithAgentGuard(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to parse: %v", err)
 	}
-	if req.AgentGuard == nil {
-		t.Fatal("expected _agentguard to be parsed")
+	if req.LobsterTrap == nil {
+		t.Fatal("expected _lobstertrap to be parsed")
 	}
-	if req.AgentGuard.DeclaredIntent != "general" {
-		t.Errorf("expected declared_intent general, got %s", req.AgentGuard.DeclaredIntent)
+	if req.LobsterTrap.DeclaredIntent != "general" {
+		t.Errorf("expected declared_intent general, got %s", req.LobsterTrap.DeclaredIntent)
 	}
-	if req.AgentGuard.AgentID != "my-agent-v1" {
-		t.Errorf("expected agent_id my-agent-v1, got %s", req.AgentGuard.AgentID)
+	if req.LobsterTrap.AgentID != "my-agent-v1" {
+		t.Errorf("expected agent_id my-agent-v1, got %s", req.LobsterTrap.AgentID)
 	}
-	if len(req.AgentGuard.DeclaredPaths) != 1 || req.AgentGuard.DeclaredPaths[0] != "/home/cole/notes.txt" {
-		t.Errorf("unexpected declared_paths: %v", req.AgentGuard.DeclaredPaths)
+	if len(req.LobsterTrap.DeclaredPaths) != 1 || req.LobsterTrap.DeclaredPaths[0] != "/home/cole/notes.txt" {
+		t.Errorf("unexpected declared_paths: %v", req.LobsterTrap.DeclaredPaths)
 	}
 }
 
-func TestParseChatRequest_WithoutAgentGuard(t *testing.T) {
+func TestParseChatRequest_WithoutLobsterTrap(t *testing.T) {
 	body := `{
 		"model": "llama3",
 		"messages": [{"role": "user", "content": "hello"}]
@@ -131,8 +131,8 @@ func TestParseChatRequest_WithoutAgentGuard(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to parse: %v", err)
 	}
-	if req.AgentGuard != nil {
-		t.Errorf("expected nil _agentguard for standard request, got %+v", req.AgentGuard)
+	if req.LobsterTrap != nil {
+		t.Errorf("expected nil _lobstertrap for standard request, got %+v", req.LobsterTrap)
 	}
 }
 
@@ -143,17 +143,17 @@ func TestMakeDenyResponse_WithHeaders(t *testing.T) {
 	}
 	resp := MakeDenyResponse("blocked", "test-model", headers)
 
-	if resp.AgentGuard == nil {
-		t.Fatal("expected _agentguard in deny response")
+	if resp.LobsterTrap == nil {
+		t.Fatal("expected _lobstertrap in deny response")
 	}
-	if resp.AgentGuard.RequestID != "req-42" {
-		t.Errorf("expected request_id req-42, got %s", resp.AgentGuard.RequestID)
+	if resp.LobsterTrap.RequestID != "req-42" {
+		t.Errorf("expected request_id req-42, got %s", resp.LobsterTrap.RequestID)
 	}
-	if resp.AgentGuard.Verdict != "DENY" {
-		t.Errorf("expected verdict DENY, got %s", resp.AgentGuard.Verdict)
+	if resp.LobsterTrap.Verdict != "DENY" {
+		t.Errorf("expected verdict DENY, got %s", resp.LobsterTrap.Verdict)
 	}
 
-	// Ensure _agentguard appears in JSON output
+	// Ensure _lobstertrap appears in JSON output
 	data, err := json.Marshal(resp)
 	if err != nil {
 		t.Fatalf("failed to marshal: %v", err)
@@ -162,12 +162,12 @@ func TestMakeDenyResponse_WithHeaders(t *testing.T) {
 	if err := json.Unmarshal(data, &raw); err != nil {
 		t.Fatalf("failed to unmarshal raw: %v", err)
 	}
-	if _, ok := raw["_agentguard"]; !ok {
-		t.Error("expected _agentguard key in JSON output")
+	if _, ok := raw["_lobstertrap"]; !ok {
+		t.Error("expected _lobstertrap key in JSON output")
 	}
 }
 
-func TestInjectAgentGuardHeaders(t *testing.T) {
+func TestInjectLobsterTrapHeaders(t *testing.T) {
 	backendResp := `{"id":"chatcmpl-123","object":"chat.completion","model":"llama3","choices":[{"index":0,"message":{"role":"assistant","content":"Hello!"},"finish_reason":"stop"}]}`
 
 	headers := &metadata.ResponseHeaders{
@@ -175,7 +175,7 @@ func TestInjectAgentGuardHeaders(t *testing.T) {
 		Verdict:   "ALLOW",
 	}
 
-	injected, err := injectAgentGuardHeaders([]byte(backendResp), headers)
+	injected, err := injectLobsterTrapHeaders([]byte(backendResp), headers)
 	if err != nil {
 		t.Fatalf("injection failed: %v", err)
 	}
@@ -193,15 +193,15 @@ func TestInjectAgentGuardHeaders(t *testing.T) {
 		t.Error("original 'choices' field missing after injection")
 	}
 
-	// _agentguard injected
-	agRaw, ok := raw["_agentguard"]
+	// _lobstertrap injected
+	agRaw, ok := raw["_lobstertrap"]
 	if !ok {
-		t.Fatal("_agentguard not found in injected response")
+		t.Fatal("_lobstertrap not found in injected response")
 	}
 
 	var rh metadata.ResponseHeaders
 	if err := json.Unmarshal(agRaw, &rh); err != nil {
-		t.Fatalf("failed to parse _agentguard: %v", err)
+		t.Fatalf("failed to parse _lobstertrap: %v", err)
 	}
 	if rh.RequestID != "req-1" {
 		t.Errorf("expected request_id req-1, got %s", rh.RequestID)
